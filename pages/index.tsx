@@ -1,13 +1,17 @@
 import type { NextPage } from "next";
 import { useState } from "react";
+import { Folder } from "../components/folder";
 import PlusBtn from "../components/plus-btn";
 
 const Home: NextPage = () => {
-  const [folder, setFolder] = useState<File[]>([]);
-  console.log(folder);
+  const [folders, setFolders] = useState<FileList[]>([]);
+  console.log(folders);
   return (
     <div>
-      <PlusBtn setFolder={setFolder} />
+      <PlusBtn setFolders={setFolders} folders={folders} />
+      {folders.map((folder, index) => {
+        return <Folder key={index} folder={folder} />;
+      })}
     </div>
   );
 };

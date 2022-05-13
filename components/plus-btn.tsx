@@ -1,24 +1,27 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 interface PlusBtnProps {
-  setFolder: Dispatch<SetStateAction<File[]>>;
+  folders: FileList[];
+  setFolders: Dispatch<SetStateAction<FileList[]>>;
 }
 
-export default function PlusBtn({ setFolder }: PlusBtnProps) {
+export default function PlusBtn({ setFolders, folders }: PlusBtnProps) {
   const onChangeBtn = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFolder(Array.from(e.target.files));
+      if (e.target.files.length !== 0) {
+        setFolders([...folders, e.target.files]);
+      }
     }
   };
 
   return (
     <input
       type="file"
+      multiple
       //@ts-expect-error
       directory=""
       webkitdirectory=""
       onChange={onChangeBtn}
-      multiple
     />
   );
 }
