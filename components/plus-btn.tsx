@@ -17,7 +17,6 @@ export default function PlusBtn({ setFolders, folders }: PlusBtnProps) {
   return (
     <input
       type="file"
-      multiple
       //@ts-expect-error
       directory=""
       webkitdirectory=""
