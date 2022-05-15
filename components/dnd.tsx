@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { fromEvent } from "file-selector";
+import { FileWithPath, fromEvent } from "file-selector";
+import { sortArrayByDirName } from "../lib/sort-array";
 
 interface DndBoxProps {
   children: React.ReactNode;
@@ -7,7 +8,7 @@ interface DndBoxProps {
   setFolders: Dispatch<SetStateAction<FileList[]>>;
 }
 
-export function DndBox({ children, setFolders }: DndBoxProps) {
+export function DndBox({ children, setFolders, folders }: DndBoxProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<HTMLDivElement | null>(null);
 
@@ -45,18 +46,14 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
     const folderList = folderNames.map((folderName) => {
       const newFolderList = new DataTransfer();
       //@ts-ignore
-      files.forEach((file) => {
-        //@ts-ignore
-        if (file.path.split("/")[1] === folderName) {
-          //@ts-ignore
+      files.forEach((file: FileWithPath) => {
+        if (file.path?.split("/")[1] === folderName) {
           newFolderList.items.add(file);
         }
       });
       return newFolderList.files;
     });
-    setFolders((value) => {
-      return [...value, ...folderList];
-    });
+    setFolders(sortArrayByDirName([...folders, ...folderList]));
   };
 
   useEffect(() => {

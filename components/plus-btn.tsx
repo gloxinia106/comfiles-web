@@ -1,4 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { sortArrayByDirName } from "../lib/sort-array";
 
 interface PlusBtnProps {
   folders: FileList[];
@@ -9,7 +10,7 @@ export default function PlusBtn({ setFolders, folders }: PlusBtnProps) {
   const onChangeBtn = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       if (e.target.files.length !== 0) {
-        setFolders([...folders, e.target.files]);
+        setFolders(sortArrayByDirName([...folders, e.target.files]));
       }
     }
   };

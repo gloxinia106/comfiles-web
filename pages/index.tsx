@@ -4,11 +4,13 @@ import { Folder } from "../components/folder";
 import PlusBtn from "../components/plus-btn";
 import { saveZip } from "../lib/save-zip";
 import { DndBox } from "../components/dnd";
+import { combineFile } from "../lib/combine-file";
 
 const Home: NextPage = () => {
   const [folders, setFolders] = useState<FileList[]>([]);
   const clickBtn = () => {
-    saveZip(folders);
+    const folder = combineFile(folders);
+    saveZip(folder);
   };
   return (
     <>
