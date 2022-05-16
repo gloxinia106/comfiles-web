@@ -1,4 +1,4 @@
-import { sortArrayByFileName } from "./sort-array";
+import { sortArrayByFileName } from "./utils";
 
 export const combineFile = (folders: FileList[]): FileList => {
   let startNum = 1;

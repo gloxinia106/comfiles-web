@@ -8,20 +8,56 @@ import { combineFile } from "../lib/combine-file";
 
 const Home: NextPage = () => {
   const [folders, setFolders] = useState<FileList[]>([]);
-  const clickBtn = () => {
+  const [percent, setPercent] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const clickBtn = async () => {
+    setLoading(true);
     const folder = combineFile(folders);
-    saveZip(folder);
+    saveZip(folder, setLoading, setPercent);
   };
   return (
-    <>
-      <DndBox folders={folders} setFolders={setFolders}>
-        <PlusBtn setFolders={setFolders} folders={folders} />
-        {folders.map((folder, index) => {
-          return <Folder key={index} folder={folder} />;
-        })}
-      </DndBox>
-      <button onClick={clickBtn}>저장</button>
-    </>
+    <div className="bg-gray-50 w-screen h-screen">
+      <div className="flex justify-center flex-col items-center">
+        <div className="mt-14 flex justify-center flex-col items-center ">
+          <h1 className="font-bold text-3xl">파일 합치기</h1>
+          <span className="mt-3 text-lg">
+            폴더 안에 있는 파일들을 하나로 합치세요
+          </span>
+          <PlusBtn setFolders={setFolders} folders={folders} />
+        </div>
+        <DndBox setFolders={setFolders}>
+          {folders.map((folder, index) => {
+            return (
+              <Folder
+                key={index}
+                folderIndex={index}
+                folders={folders}
+                folder={folder}
+                setFolders={setFolders}
+              />
+            );
+          })}
+        </DndBox>
+        {loading ? (
+          <div
+            className={
+              "mt-10 bg-sky-400 rounded py-3 px-20 text-white font-semibold text-xl hover:bg-sky-600 transition"
+            }
+          >
+            {`${percent}%`}
+          </div>
+        ) : (
+          <button
+            className={
+              "mt-10 bg-sky-400 rounded py-3 px-20 text-white font-semibold text-xl hover:bg-sky-600 transition"
+            }
+            onClick={clickBtn}
+          >
+            저장
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

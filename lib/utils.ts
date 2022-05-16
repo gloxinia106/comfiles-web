@@ -1,4 +1,6 @@
-import * as path from "path";
+export function cls(...classnames: string[]) {
+  return classnames.join(" ");
+}
 
 const extractDirName = (folder: FileList): string => {
   let relativePath = "";
@@ -14,7 +16,6 @@ const extractDirName = (folder: FileList): string => {
 };
 
 export const sortArrayByDirName = (arr: FileList[]) => {
-  console.log(arr);
   return arr.sort(function (a, b) {
     let a1 = extractDirName(a);
     let b1 = extractDirName(b);

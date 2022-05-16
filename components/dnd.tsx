@@ -1,14 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FileWithPath, fromEvent } from "file-selector";
-import { sortArrayByDirName } from "../lib/sort-array";
+import { cls, sortArrayByDirName } from "../lib/utils";
 
 interface DndBoxProps {
   children: React.ReactNode;
-  folders: FileList[];
   setFolders: Dispatch<SetStateAction<FileList[]>>;
 }
 
-export function DndBox({ children, setFolders, folders }: DndBoxProps) {
+export function DndBox({ children, setFolders }: DndBoxProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<HTMLDivElement | null>(null);
 
@@ -34,7 +33,6 @@ export function DndBox({ children, setFolders, folders }: DndBoxProps) {
   const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("drops");
     const files = await fromEvent(e);
     let folderNames = files.map((file) => {
       //@ts-ignore
@@ -53,7 +51,10 @@ export function DndBox({ children, setFolders, folders }: DndBoxProps) {
       });
       return newFolderList.files;
     });
-    setFolders(sortArrayByDirName([...folders, ...folderList]));
+    setFolders((value) => {
+      return sortArrayByDirName([...value, ...folderList]);
+    });
+    setIsDragging(false);
   };
 
   useEffect(() => {
@@ -70,8 +71,17 @@ export function DndBox({ children, setFolders, folders }: DndBoxProps) {
   }, []);
 
   return (
-    <div ref={dragRef} className="border w-32 h-32">
-      {children}
+    <div className="mt-10 w-full flex justify-center flex-col items-center">
+      <span>또는 파일을 아래에 두기</span>
+      <div
+        ref={dragRef}
+        className={cls(
+          "bg-white py-2 space-y-3 divide-y px-3 rounded-xl border-2 w-4/5 h-96 flex flex-col overflow-y-auto",
+          isDragging ? "border-blue-500" : ""
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }
