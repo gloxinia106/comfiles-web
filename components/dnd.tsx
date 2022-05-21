@@ -72,7 +72,7 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
 
   return (
     <div className="mt-10 w-full flex justify-center flex-col items-center">
-      <span>또는 파일을 아래에 두기</span>
+      <span>또는 폴더를 아래에 두기</span>
       <div
         ref={dragRef}
         className={cls(
