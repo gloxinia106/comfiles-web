@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Folder } from "../components/folder";
 import PlusBtn from "../components/plus-btn";
 import { saveZip } from "../lib/save-zip";
@@ -11,10 +11,14 @@ const Home: NextPage = () => {
   const [folders, setFolders] = useState<FileList[]>([]);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [folderName, setFolderName] = useState<string>("newFolder");
   const clickBtn = async () => {
     setLoading(true);
     const folder = combineFile(folders);
-    saveZip(folder, setLoading, setPercent);
+    saveZip(folder, setLoading, setPercent, folderName);
+  };
+  const onChangeFolderName = (e: ChangeEvent<HTMLInputElement>) => {
+    setFolderName(e.target.value);
   };
   return (
     <>
@@ -30,6 +34,15 @@ const Home: NextPage = () => {
               폴더 안에 있는 파일들을 하나로 합치세요
             </span>
             <PlusBtn setFolders={setFolders} folders={folders} />
+            <label className="mt-5" htmlFor="folder-name">
+              폴더 이름
+            </label>
+            <input
+              id="folder-name"
+              className="bg-white px-2 py-1 w-full focus:outline-none border-2 rounded"
+              defaultValue={folderName}
+              onChange={onChangeFolderName}
+            />
           </div>
           <DndBox setFolders={setFolders}>
             {folders.map((folder, index) => {
@@ -37,8 +50,8 @@ const Home: NextPage = () => {
                 <Folder
                   key={index}
                   folderIndex={index}
-                  folders={folders}
                   folder={folder}
+                  folders={folders}
                   setFolders={setFolders}
                 />
               );

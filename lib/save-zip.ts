@@ -5,10 +5,11 @@ import { Dispatch, SetStateAction } from "react";
 export const saveZip = (
   folder: FileList,
   setLoading: Dispatch<SetStateAction<boolean>>,
-  setPercent: Dispatch<SetStateAction<number>>
+  setPercent: Dispatch<SetStateAction<number>>,
+  folderName: string
 ) => {
   const zip = new JSZip();
-  const folderZip = zip.folder("newFolder");
+  const folderZip = zip.folder(folderName);
   Array.prototype.forEach.call(folder, (file: File) => {
     folderZip?.file(file.name, file);
   });
@@ -17,7 +18,7 @@ export const saveZip = (
       setPercent(Math.floor(metadata.percent));
     })
     .then(function (blob) {
-      saveAs(blob, "newFolder.zip");
+      saveAs(blob, `${folderName}.zip`);
       setLoading(false);
     });
 };
