@@ -25,6 +25,10 @@ const Home: NextPage = () => {
       <Head>
         <title>폴더 합치기</title>
         <meta name="description" content="폴더 내 파일 합치는 사이트" />
+        <meta
+          name="google-site-verification"
+          content="rc3UMPHLSf5ifn3slyl_A4o3kj9y2oquWTr6Yoa4cTs"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="bg-gray-50 w-screen h-screen">
