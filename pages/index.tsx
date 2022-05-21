@@ -24,6 +24,7 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>폴더 합치기</title>
+        <meta name="description" content="폴더 내 파일 합치는 사이트" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="bg-gray-50 w-screen h-screen">
