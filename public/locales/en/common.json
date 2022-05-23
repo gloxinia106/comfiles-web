@@ -1,0 +1,10 @@
+{
+  "head-title": "comfolders",
+  "head-description": "Merges files into a folder.",
+  "title": "Merges Folders",
+  "description": "Combine folders in the files",
+  "folder-name": "Folder Name",
+  "save": "Save",
+  "dnd-description": "or drop folders here",
+  "add-folder": "Select Folder"
+}

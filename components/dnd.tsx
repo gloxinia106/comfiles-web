@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FileWithPath, fromEvent } from "file-selector";
 import { cls, sortArrayByDirName } from "../lib/utils";
+import { useTranslation } from "next-i18next";
 
 interface DndBoxProps {
   children: React.ReactNode;
@@ -69,10 +70,11 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
       dragRef.current?.removeEventListener("drop", handleDrop);
     };
   }, []);
+  const { t } = useTranslation("common");
 
   return (
     <div className="mt-10 w-full flex justify-center flex-col items-center">
-      <span>또는 폴더를 아래에 두기</span>
+      <span>{t("dnd-description")}</span>
       <div
         ref={dragRef}
         className={cls(

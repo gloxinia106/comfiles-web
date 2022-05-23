@@ -1,0 +1,10 @@
+{
+  "head-title": "폴더 합치기",
+  "head-description": "폴더 내 파일 합치는 사이트",
+  "title": "폴더 합치기",
+  "description": "폴더 안에 있는 파일들을 하나로 합치세요",
+  "folder-name": "폴더 이름",
+  "save": "저장",
+  "dnd-description": "또는 폴더를 아래에 두기",
+  "add-folder": "폴더 추가하기"
+}

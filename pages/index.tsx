@@ -1,17 +1,21 @@
 import type { NextPage } from "next";
 import { ChangeEvent, useState } from "react";
+import Head from "next/head";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Folder } from "../components/folder";
 import PlusBtn from "../components/plus-btn";
 import { saveZip } from "../lib/save-zip";
 import { DndBox } from "../components/dnd";
 import { combineFile } from "../lib/combine-file";
-import Head from "next/head";
+import { useTranslation } from "next-i18next";
 
 const Home: NextPage = () => {
   const [folders, setFolders] = useState<FileList[]>([]);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [folderName, setFolderName] = useState<string>("newFolder");
+  const { t } = useTranslation("common");
+
   const clickBtn = async () => {
     setLoading(true);
     const folder = combineFile(folders);
@@ -23,8 +27,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>폴더 합치기</title>
-        <meta name="description" content="폴더 내 파일 합치는 사이트" />
+        <title>{t("head-title")}</title>
+        <meta name="description" content={t("head-description")} />
         <meta
           name="google-site-verification"
           content="rc3UMPHLSf5ifn3slyl_A4o3kj9y2oquWTr6Yoa4cTs"
@@ -34,13 +38,11 @@ const Home: NextPage = () => {
       <div className="bg-gray-50 w-screen h-screen">
         <div className="flex justify-center flex-col items-center">
           <div className="mt-14 flex justify-center flex-col items-center ">
-            <h1 className="font-bold text-4xl">폴더 합치기</h1>
-            <span className="mt-3 text-lg">
-              폴더 안에 있는 파일들을 하나로 합치세요
-            </span>
+            <h1 className="font-bold text-4xl">{t("title")}</h1>
+            <span className="mt-3 text-lg">{t("description")}</span>
             <PlusBtn setFolders={setFolders} folders={folders} />
             <label className="mt-5" htmlFor="folder-name">
-              폴더 이름
+              {t("folder-name")}
             </label>
             <input
               id="folder-name"
@@ -77,7 +79,7 @@ const Home: NextPage = () => {
               }
               onClick={clickBtn}
             >
-              저장
+              {t("save")}
             </button>
           )}
         </div>
@@ -87,3 +89,9 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps = async ({ locale }: { locale: any }) => ({
+  props: {
+    ...(await serverSideTranslations(locale, ["common"])),
+  },
+});
