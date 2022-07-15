@@ -1,3 +1,5 @@
+import { FolderObj } from "../types/interface";
+
 export function cls(...classnames: string[]) {
   return classnames.join(" ");
 }
@@ -15,10 +17,10 @@ const extractDirName = (folder: FileList): string => {
   return folderName;
 };
 
-export const sortArrayByDirName = (arr: FileList[]) => {
+export const sortArrayByDirName = (arr: FolderObj[]) => {
   return arr.sort(function (a, b) {
-    let a1 = extractDirName(a);
-    let b1 = extractDirName(b);
+    let a1 = extractDirName(a.fileList);
+    let b1 = extractDirName(b.fileList);
 
     return a1.localeCompare(b1, undefined, {
       numeric: true,

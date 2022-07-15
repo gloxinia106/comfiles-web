@@ -2,13 +2,16 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FileWithPath, fromEvent } from "file-selector";
 import { cls, sortArrayByDirName } from "../lib/utils";
 import { useTranslation } from "next-i18next";
+import { Droppable } from "react-beautiful-dnd";
+import { FolderObj } from "../types/interface";
 
 interface DndBoxProps {
   children: React.ReactNode;
-  setFolders: Dispatch<SetStateAction<FileList[]>>;
+  foldersLen: number;
+  setFolders: Dispatch<SetStateAction<FolderObj[]>>;
 }
 
-export function DndBox({ children, setFolders }: DndBoxProps) {
+export function DndBox({ children, setFolders, foldersLen }: DndBoxProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<HTMLDivElement | null>(null);
 
@@ -42,7 +45,7 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
     });
     //@ts-ignore
     folderNames = [...new Set(folderNames)];
-    const folderList = folderNames.map((folderName) => {
+    const folderList = folderNames.map((folderName, index) => {
       const newFolderList = new DataTransfer();
       //@ts-ignore
       files.forEach((file: FileWithPath) => {
@@ -50,7 +53,11 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
           newFolderList.items.add(file);
         }
       });
-      return newFolderList.files;
+      const newFolderObj = {
+        id: foldersLen + index + 1 + "",
+        fileList: newFolderList.files,
+      };
+      return newFolderObj;
     });
     setFolders((value) => {
       return sortArrayByDirName([...value, ...folderList]);
@@ -75,15 +82,24 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
   return (
     <div className="mt-10 w-full flex justify-center flex-col items-center">
       <span>{t("dnd-description")}</span>
-      <div
-        ref={dragRef}
-        className={cls(
-          "bg-white py-2 space-y-3 divide-y px-3 rounded-xl border-2 w-4/5 h-96 flex flex-col overflow-y-auto",
-          isDragging ? "border-blue-500" : ""
+      <Droppable droppableId="dndBox">
+        {(provided) => (
+          <div
+            ref={(el) => {
+              dragRef.current = el;
+              provided.innerRef(el);
+            }}
+            {...provided.droppableProps}
+            className={cls(
+              "bg-white py-2 space-y-3 divide-y px-3 rounded-xl border-2 w-4/5 h-96 flex flex-col overflow-y-auto",
+              isDragging ? "border-blue-500" : ""
+            )}
+          >
+            {children}
+            {provided.placeholder}
+          </div>
         )}
-      >
-        {children}
-      </div>
+      </Droppable>
     </div>
   );
 }

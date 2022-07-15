@@ -2,15 +2,21 @@ import type { NextPage } from "next";
 import { ChangeEvent, useState } from "react";
 import Head from "next/head";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Folder } from "../components/folder";
+import { useTranslation } from "next-i18next";
+import {
+  DragDropContext,
+  DropResult,
+  resetServerContext,
+} from "react-beautiful-dnd";
+import Folder from "../components/folder";
 import PlusBtn from "../components/plus-btn";
 import { saveZip } from "../lib/save-zip";
 import { DndBox } from "../components/dnd";
 import { combineFile } from "../lib/combine-file";
-import { useTranslation } from "next-i18next";
+import { FolderObj } from "../types/interface";
 
 const Home: NextPage = () => {
-  const [folders, setFolders] = useState<FileList[]>([]);
+  const [folders, setFolders] = useState<FolderObj[]>([]);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [folderName, setFolderName] = useState<string>("newFolder");
@@ -23,6 +29,17 @@ const Home: NextPage = () => {
   };
   const onChangeFolderName = (e: ChangeEvent<HTMLInputElement>) => {
     setFolderName(e.target.value);
+  };
+
+  const onDragEnd = ({ destination, source }: DropResult) => {
+    setFolders((oldFolders) => {
+      if (!destination) return oldFolders;
+      const newFolders = [...oldFolders];
+      const slicedFolder = newFolders[source.index];
+      newFolders.splice(source.index, 1);
+      newFolders.splice(destination.index, 0, slicedFolder);
+      return newFolders;
+    });
   };
   return (
     <>
@@ -51,19 +68,21 @@ const Home: NextPage = () => {
               onChange={onChangeFolderName}
             />
           </div>
-          <DndBox setFolders={setFolders}>
-            {folders.map((folder, index) => {
-              return (
-                <Folder
-                  key={index}
-                  folderIndex={index}
-                  folder={folder}
-                  folders={folders}
-                  setFolders={setFolders}
-                />
-              );
-            })}
-          </DndBox>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <DndBox foldersLen={folders.length} setFolders={setFolders}>
+              {folders.map((folder, index) => {
+                return (
+                  <Folder
+                    key={folder.id}
+                    folderIndex={index}
+                    folder={folder}
+                    folders={folders}
+                    setFolders={setFolders}
+                  />
+                );
+              })}
+            </DndBox>
+          </DragDropContext>
           {loading ? (
             <div
               className={
@@ -90,8 +109,11 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export const getStaticProps = async ({ locale }: { locale: any }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ["common"])),
-  },
-});
+export const getStaticProps = async ({ locale }: { locale: any }) => {
+  resetServerContext();
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  };
+};
