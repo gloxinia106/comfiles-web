@@ -69,7 +69,7 @@ const Home: NextPage = () => {
             />
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
-            <DndBox foldersLen={folders.length} setFolders={setFolders}>
+            <DndBox setFolders={setFolders}>
               {folders.map((folder, index) => {
                 return (
                   <Folder

@@ -7,11 +7,10 @@ import { FolderObj } from "../types/interface";
 
 interface DndBoxProps {
   children: React.ReactNode;
-  foldersLen: number;
   setFolders: Dispatch<SetStateAction<FolderObj[]>>;
 }
 
-export function DndBox({ children, setFolders, foldersLen }: DndBoxProps) {
+export function DndBox({ children, setFolders }: DndBoxProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<HTMLDivElement | null>(null);
 
@@ -45,7 +44,7 @@ export function DndBox({ children, setFolders, foldersLen }: DndBoxProps) {
     });
     //@ts-ignore
     folderNames = [...new Set(folderNames)];
-    const folderList = folderNames.map((folderName, index) => {
+    const folderList = folderNames.map((folderName) => {
       const newFolderList = new DataTransfer();
       //@ts-ignore
       files.forEach((file: FileWithPath) => {
@@ -53,14 +52,14 @@ export function DndBox({ children, setFolders, foldersLen }: DndBoxProps) {
           newFolderList.items.add(file);
         }
       });
-      const newFolderObj = {
-        id: foldersLen + index + 1 + "",
-        fileList: newFolderList.files,
-      };
-      return newFolderObj;
+      return newFolderList.files;
     });
     setFolders((value) => {
-      return sortArrayByDirName([...value, ...folderList]);
+      const newFolderList = folderList.map((oldFolderList, index) => ({
+        id: value.length + index + 1 + "",
+        fileList: oldFolderList,
+      }));
+      return sortArrayByDirName([...value, ...newFolderList]);
     });
     setIsDragging(false);
   };
