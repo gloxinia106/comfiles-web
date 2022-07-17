@@ -57,7 +57,11 @@ const Home: NextPage = () => {
           <div className="mt-14 flex justify-center flex-col items-center ">
             <h1 className="font-bold text-4xl">{t("title")}</h1>
             <span className="mt-3 text-lg">{t("description")}</span>
-            <PlusBtn setFolders={setFolders} folders={folders} />
+            <PlusBtn
+              setFolders={setFolders}
+              folders={folders}
+              setFolderName={setFolderName}
+            />
             <label className="mt-5" htmlFor="folder-name">
               {t("folder-name")}
             </label>
@@ -69,7 +73,7 @@ const Home: NextPage = () => {
             />
           </div>
           <DragDropContext onDragEnd={onDragEnd}>
-            <DndBox setFolders={setFolders}>
+            <DndBox setFolders={setFolders} setFolderName={setFolderName}>
               {folders.map((folder, index) => {
                 return (
                   <Folder
@@ -78,6 +82,7 @@ const Home: NextPage = () => {
                     folder={folder}
                     folders={folders}
                     setFolders={setFolders}
+                    setFolderName={setFolderName}
                   />
                 );
               })}

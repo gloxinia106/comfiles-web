@@ -41,3 +41,16 @@ export const sortArrayByFileName = (arr: FileList) => {
   });
   return sortedArr;
 };
+
+export const extracFolderName = (folder: FolderObj) => {
+  let relativePath = "";
+  //@ts-ignore
+  if (folder.fileList[0].path) {
+    //@ts-ignore
+    relativePath = folder.fileList[0].path.slice(1);
+  } else {
+    relativePath = folder.fileList[0].webkitRelativePath;
+  }
+  var folderName = relativePath.split("/")[0];
+  return folderName;
+};

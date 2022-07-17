@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FileWithPath, fromEvent } from "file-selector";
-import { cls, sortArrayByDirName } from "../lib/utils";
+import { cls, extracFolderName, sortArrayByDirName } from "../lib/utils";
 import { useTranslation } from "next-i18next";
 import { Droppable } from "react-beautiful-dnd";
 import { FolderObj } from "../types/interface";
@@ -8,9 +8,10 @@ import { FolderObj } from "../types/interface";
 interface DndBoxProps {
   children: React.ReactNode;
   setFolders: Dispatch<SetStateAction<FolderObj[]>>;
+  setFolderName: Dispatch<SetStateAction<string>>;
 }
 
-export function DndBox({ children, setFolders }: DndBoxProps) {
+export function DndBox({ children, setFolders, setFolderName }: DndBoxProps) {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<HTMLDivElement | null>(null);
 
@@ -59,7 +60,10 @@ export function DndBox({ children, setFolders }: DndBoxProps) {
         id: value.length + index + 1 + "",
         fileList: oldFolderList,
       }));
-      return sortArrayByDirName([...value, ...newFolderList]);
+      const sortedFolders = sortArrayByDirName([...value, ...newFolderList]);
+      const firstName = extracFolderName(sortedFolders[0]);
+      setFolderName(firstName);
+      return sortedFolders;
     });
     setIsDragging(false);
   };

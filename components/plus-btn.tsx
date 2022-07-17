@@ -1,14 +1,19 @@
 import { useTranslation } from "next-i18next";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { sortArrayByDirName } from "../lib/utils";
+import { extracFolderName, sortArrayByDirName } from "../lib/utils";
 import { FolderObj } from "../types/interface";
 
 interface PlusBtnProps {
   folders: FolderObj[];
   setFolders: Dispatch<SetStateAction<FolderObj[]>>;
+  setFolderName: Dispatch<SetStateAction<string>>;
 }
 
-export default function PlusBtn({ setFolders, folders }: PlusBtnProps) {
+export default function PlusBtn({
+  setFolders,
+  setFolderName,
+  folders,
+}: PlusBtnProps) {
   const { t } = useTranslation("common");
   const onChangeBtn = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -17,7 +22,10 @@ export default function PlusBtn({ setFolders, folders }: PlusBtnProps) {
           id: folders.length + 1 + "",
           fileList: e.target.files,
         };
-        setFolders(sortArrayByDirName([...folders, newFolderObj]));
+        const newFolder = sortArrayByDirName([...folders, newFolderObj]);
+        const folderName = extracFolderName(newFolder[0]);
+        setFolderName(folderName);
+        setFolders(newFolder);
       }
     }
   };

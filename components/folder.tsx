@@ -1,5 +1,6 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import { extracFolderName } from "../lib/utils";
 import { FolderObj } from "../types/interface";
 
 interface FolderProps {
@@ -7,25 +8,28 @@ interface FolderProps {
   folder: FolderObj;
   folders: FolderObj[];
   setFolders: Dispatch<SetStateAction<FolderObj[]>>;
+  setFolderName: Dispatch<SetStateAction<string>>;
 }
 
-function Folder({ folderIndex, folder, folders, setFolders }: FolderProps) {
-  let relativePath = "";
-  //@ts-ignore
-  if (folder.fileList[0].path) {
-    //@ts-ignore
-    relativePath = folder.fileList[0].path.slice(1);
-  } else {
-    relativePath = folder.fileList[0].webkitRelativePath;
-  }
-  var folderName = relativePath.split("/")[0];
+function Folder({
+  folderIndex,
+  folder,
+  folders,
+  setFolders,
+  setFolderName: propsSetFolderName,
+}: FolderProps) {
+  const [folderName, setFolderName] = useState("");
+  useEffect(() => {
+    const extractedName = extracFolderName(folder);
+    setFolderName(extractedName);
+  }, [folder]);
 
   const onClickX = () => {
-    setFolders(
-      folders.filter((value) => {
-        return folder.id !== value.id;
-      })
-    );
+    const delFolder = folders.filter((value) => {
+      return folder.id !== value.id;
+    });
+    propsSetFolderName(extracFolderName(delFolder[0]));
+    setFolders(delFolder);
   };
 
   return (
