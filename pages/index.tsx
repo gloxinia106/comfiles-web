@@ -68,7 +68,7 @@ const Home: NextPage = () => {
             <input
               id="folder-name"
               className="bg-white px-2 py-1 w-full focus:outline-none border-2 rounded"
-              defaultValue={folderName}
+              value={folderName}
               onChange={onChangeFolderName}
             />
           </div>
