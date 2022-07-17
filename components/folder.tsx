@@ -28,8 +28,9 @@ function Folder({
     const delFolder = folders.filter((value) => {
       return folder.id !== value.id;
     });
-    propsSetFolderName(extracFolderName(delFolder[0]));
     setFolders(delFolder);
+    if (delFolder.length < 1) return;
+    propsSetFolderName(extracFolderName(delFolder[0]));
   };
 
   return (
